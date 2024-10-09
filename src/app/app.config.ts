@@ -19,6 +19,7 @@ const dbConfig: DBConfig = {
     storeConfig: { keyPath: 'id', autoIncrement: true },
     storeSchema: [
       { name: 'title', keypath: 'title', options: { unique: false } },
+      { name: 'type', keypath: 'type', options: { unique: false } },
       { name: 'height', keypath: 'height', options: { unique: false } },
       { name: 'width', keypath: 'width', options: { unique: false } },
       { name: 'left', keypath: 'left', options: { unique: false } },
@@ -29,6 +30,7 @@ const dbConfig: DBConfig = {
     store: 'emptyCards',
     storeConfig: { keyPath: 'id', autoIncrement: true },
     storeSchema: [
+      { name: 'type', keypath: 'type', options: { unique: false } },
       { name: 'height', keypath: 'height', options: { unique: false } },
       { name: 'width', keypath: 'width', options: { unique: false } },
       { name: 'left', keypath: 'left', options: { unique: false } },

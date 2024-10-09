@@ -1,6 +1,7 @@
+// This needs to stay in sync with the app.config.ts store name
 export enum CardType {
-    empty,
-    noteGroup
+    emptyCard = 'emptyCards',
+    noteGroup = 'noteGroups'
 }
 
 export class Card {
@@ -10,5 +11,5 @@ export class Card {
     public left: string = "";
     public top: string = "";
     public transform: string = "";
-    public type: CardType = CardType.empty;
+    public type: CardType = CardType.emptyCard;
 }

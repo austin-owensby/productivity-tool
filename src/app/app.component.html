@@ -4,11 +4,38 @@
 @else {
   <div #grid id="grid" cdkDropListGroup [style.background-size]="backgroundSize">
     <button mat-raised-button (click)="createCard()">New Card</button>
-    @for (card of cards; track card.id) {
-      <app-card [card]="card" [gridSize]="gridSize" [gridElement]="grid" (cardDeleted)="deleteCard($event)" (noteGroupCreated)="createNoteGroup(card)"></app-card>
-    }
-    @for (noteGroup of noteGroups; track noteGroup.id) {
-      <app-note-group [noteGroup]="noteGroup" [gridSize]="gridSize" [gridElement]="grid" (noteGroupUpdated)="updateNoteGroup($event)" (noteGroupDeleted)="deleteNoteGroup($event)"></app-note-group>
+    <!--List of cards-->
+    @for (card of cards; track $index) {
+      <app-card [card]="card" [gridSize]="gridSize" [gridElement]="grid" (cardDeleted)="deleteCard(card)" (cardUpdated)="updateCard(card)">
+        <!--Card Header-->
+        <ng-container header>
+          @switch (card.type) {
+            @case (cardType.emptyCard) {
+              <h2>Choose a card type</h2>
+            }
+            @case (cardType.noteGroup) {
+              <mat-form-field class="note-group-title">
+                <mat-label>Title</mat-label>
+                <input matInput [(ngModel)]="castToNoteGroup(card).title" (change)="updateCard(card)">
+              </mat-form-field>
+            }
+          }
+        </ng-container>
+
+        <!--Card Content-->
+        <ng-container>
+          @switch (card.type) {
+            @case (cardType.emptyCard) {
+              <div class="button-list">
+                <button mat-raised-button (click)="createNoteGroup(card)">New Note Group</button>
+              </div>
+            }
+            @case (cardType.noteGroup) {
+              <app-note-group [noteGroup]="castToNoteGroup(card)" (noteGroupUpdated)="updateCard(getNoteCardById($event))"></app-note-group>
+            }
+          }
+        </ng-container>
+      </app-card>
     }
   </div>
 }

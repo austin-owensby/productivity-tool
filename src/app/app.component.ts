@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
-import { NoteGroupComponent } from "./note-group/note-group.component";
 import { CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import {MatSliderModule} from '@angular/material/slider';
 import { NoteGroup } from './models/note-group';
 import { Settings } from './models/settings';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { Card, CardType } from './models/card';
 import { CardComponent } from './card/card.component';
+import { NoteGroupComponent } from "./note-group/note-group.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NoteGroupComponent, CardComponent, CdkDropListGroup, MatProgressSpinnerModule, MatSliderModule, MatButtonModule, MatIconModule],
+  imports: [NoteGroupComponent, CardComponent, CdkDropListGroup, MatProgressSpinnerModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -23,7 +24,7 @@ export class AppComponent {
   gridSize: number = 0;
   backgroundSize: string = '';
   cards: Card[] = [];
-  noteGroups: NoteGroup[] = [];
+  cardType = CardType;
 
   constructor(private dbService: NgxIndexedDBService) {
     this.fetchSettings(() => this.loadData());
@@ -67,12 +68,13 @@ export class AppComponent {
   }
 
   private loadData() {
+    this.cards = [];
     this.dbService.getAll<Card>('emptyCards').subscribe((cards) => {
-      this.cards = cards;
+      this.cards.push(...cards);
 
       this.dbService.getAll<NoteGroup>('noteGroups').subscribe((noteGroups) => {
-        this.noteGroups = noteGroups;
-  
+        this.cards.push(...noteGroups);
+
         this.loading = false;
       });
     });
@@ -85,7 +87,7 @@ export class AppComponent {
       left: "0",
       top: "0",
       transform: 'matrix(1, 0, 0, 1, 0, 0)',
-      type: CardType.empty
+      type: CardType.emptyCard
     };
 
     this.dbService.add('emptyCards', newCard).subscribe((card) => {
@@ -106,43 +108,35 @@ export class AppComponent {
     };
 
     this.dbService.add('noteGroups', newNoteGroup).subscribe((noteGroup) => {
-      this.noteGroups.push(noteGroup);
-      this.dbService.delete('emptyCards', card.id!).subscribe(() => {
-        this.deleteCard(card.id!);
-      });
+      this.cards.push(noteGroup);
+      this.deleteCard(card);
     });
   }
 
-  updateNoteGroup(id: number) {
-    const noteGroup = this.noteGroups.find(n => n.id == id);
-
-    if (noteGroup == null) {
-      console.error(`Unable to find the note group ${id} the note previously belonged to.`);
-      return;
-    }
-
-    this.dbService.update('noteGroups', noteGroup).subscribe();
+  updateCard(card: Card) {
+    this.dbService.update(card.type, card).subscribe();
   }
 
-  deleteNoteGroup(id: number) {
-    const cardGroupIndex = this.noteGroups.findIndex(n => n.id == id);
-
-    if (cardGroupIndex == null) {
-      console.error(`Unable to find the note group ${id} to delete it.`);
-      return;
-    }
-
-    this.noteGroups.splice(cardGroupIndex, 1);
-  }
-
-  deleteCard(id: number) {
-    const cardIndex = this.cards.findIndex(n => n.id == id);
+  deleteCard(card: Card) {
+    const cardIndex = this.cards.findIndex(n => n.id == card.id && n.type == card.type);
 
     if (cardIndex == null) {
-      console.error(`Unable to find the card ${id} to delete it.`);
+      console.error(`Unable to find the ${card.type} ${card.id} to delete it.`);
       return;
     }
 
     this.cards.splice(cardIndex, 1);
+
+    this.dbService.delete(card.type, card.id!).subscribe();
+  }
+
+  castToNoteGroup(card: Card) {
+    return card as NoteGroup;
+  }
+
+  getNoteCardById(id: number) {
+    const noteCard = this.cards.find(c => c.id == id && c.type == CardType.noteGroup);
+
+    return noteCard!;
   }
 }
