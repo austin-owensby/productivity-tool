@@ -1,0 +1,33 @@
+.card {
+    border: 1px solid black;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12); 
+    position: absolute;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: .5rem;
+
+    .drag-handle {
+        padding-top: 7px;
+    }
+  }
+
+  .delete-button {
+    margin-left: auto;
+  }
+
+  .card-content {
+    height: 100%;
+    padding: .5rem;
+  }
+
+  .button-list {
+    display: flex;
+    justify-content: center;
+  }

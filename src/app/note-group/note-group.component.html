@@ -1,0 +1,38 @@
+<div [id]="'note-group-' + noteGroup.id" class="note-group"
+    [ngStyle]="{'transform': noteGroup.transform, 'height': noteGroup.height, 'width': noteGroup.width, 'top': noteGroup.top, 'left': noteGroup.left}"
+    cdkDrag (cdkDragReleased)="handleDrop()" [cdkDragConstrainPosition]="computeDragRenderPos" cdkDragBoundary="#grid"
+    ngResizable [rzHandles]="'n,e,s,w,se,sw,ne,nw'" [rzGrid]="gridSize" [rzMinWidth]="150" [rzMinHeight]="200" (rzStop)="handleResize()" [rzContainment]="gridElement">
+    <div class="note-group-content">
+        <div class="note-header">
+            <div class="drag-handle" cdkDragHandle title="Drag to move the note group">
+                <i class="material-icons">drag_indicator</i>
+            </div>
+            <mat-form-field class="note-group-title">
+                <mat-label>Title</mat-label>
+                <input matInput [(ngModel)]="noteGroup.title" (change)="updateNoteGroup()">
+            </mat-form-field>
+            <button class="delete-button" mat-mini-fab (click)="deleteNoteGroup()" title="Delete Note Group">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+        <div class="note-list" cdkDropList [cdkDropListData]="noteGroup!.notes" (cdkDropListDropped)="drop($event)">
+            @for (note of noteGroup.notes; track $index) {
+                <div class="note" cdkDrag>
+                    <div class="drag-handle" cdkDragHandle title="Drag to move and reorder notes">
+                        <i class="material-icons">drag_indicator</i>
+                    </div>
+                    <div class="note-placeholder" *cdkDragPlaceholder></div>
+                    <mat-form-field class="note-input">
+                        <input matInput [(ngModel)]="note.content" (change)="updateNoteGroup()">
+                    </mat-form-field>
+                    <button class="delete-button" mat-mini-fab (click)="deleteNote($index)" title="Delete Note Group">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            }
+        </div>
+        <button class="new-note-button" mat-mini-fab (click)="createNewNote()" title="Create New Note">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</div>

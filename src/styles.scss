@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+
+html,
+body {
+    height: 100%;
+    @include mat.form-field-density(-2);
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background: lightgrey
+}
+
+.drag-handle {
+    cursor: move;
+}
+
+.ng-resizable-diagonal {
+    border: none !important;
+}
