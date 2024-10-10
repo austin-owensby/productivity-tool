@@ -3,6 +3,7 @@
 html,
 body {
     height: 100%;
+    overflow: hidden;
     @include mat.form-field-density(-2);
 }
 
@@ -10,6 +11,10 @@ body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
     background: lightgrey
+}
+
+h2 {
+    margin: 0;
 }
 
 .drag-handle {

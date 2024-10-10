@@ -1,12 +1,20 @@
 @if (loading) {
   <mat-spinner class="loading"></mat-spinner>
+  <mat-slider min="0" max="100" step="1" showTickMarks discrete>
+    <input matSliderThumb>
+  </mat-slider>
 }
 @else {
-  <div #grid id="grid" cdkDropListGroup [style.background-size]="backgroundSize">
-    <button mat-raised-button (click)="createCard()">New Card</button>
+  <div #grid id="grid" cdkDropListGroup [style.background-size]="editing ? backgroundSize : ''">
+    <div id="settings">
+      <button mat-raised-button (click)="createCard()">New Card</button>
+      <mat-slide-toggle [(ngModel)]="editing">Edit</mat-slide-toggle>
+      <button mat-raised-button>Settings</button>
+      <i id="open-icon" class="material-icons">open_in_full</i>
+    </div>
     <!--List of cards-->
-    @for (card of cards; track $index) {
-      <app-card [card]="card" [gridSize]="gridSize" [gridElement]="grid" (cardDeleted)="deleteCard(card)" (cardUpdated)="updateCard(card)">
+    @for (card of cards; track card.type + card.id) {
+      <app-card [card]="card" [gridSize]="gridSize" [gridElement]="grid" [editing]="editing" (cardDeleted)="deleteCard(card)" (cardUpdated)="updateCard(card)">
         <!--Card Header-->
         <ng-container header>
           @switch (card.type) {
@@ -14,10 +22,14 @@
               <h2>Choose a card type</h2>
             }
             @case (cardType.noteGroup) {
-              <mat-form-field class="note-group-title">
-                <mat-label>Title</mat-label>
-                <input matInput [(ngModel)]="castToNoteGroup(card).title" (change)="updateCard(card)">
-              </mat-form-field>
+              @if (editing) {
+                <mat-form-field class="note-group-title">
+                  <input matInput [(ngModel)]="castToNoteGroup(card).title" (change)="updateCard(card)">
+                </mat-form-field>
+              }
+              @else {
+                <h2>{{castToNoteGroup(card).title}}</h2>
+              }
             }
           }
         </ng-container>

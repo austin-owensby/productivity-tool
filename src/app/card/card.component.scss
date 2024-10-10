@@ -12,6 +12,7 @@
     display: flex;
     align-items: center;
     margin-bottom: .5rem;
+    height: 48px;
 
     .drag-handle {
         padding-top: 7px;
@@ -25,9 +26,4 @@
   .card-content {
     height: 100%;
     padding: .5rem;
-  }
-
-  .button-list {
-    display: flex;
-    justify-content: center;
   }

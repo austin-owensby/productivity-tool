@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { NoteGroup } from './models/note-group';
 import { Settings } from './models/settings';
@@ -15,7 +17,7 @@ import { NoteGroupComponent } from "./note-group/note-group.component";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NoteGroupComponent, CardComponent, CdkDropListGroup, MatProgressSpinnerModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule],
+  imports: [NoteGroupComponent, CardComponent, CdkDropListGroup, MatProgressSpinnerModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSliderModule, MatSlideToggleModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -23,6 +25,7 @@ export class AppComponent {
   loading = true;
   gridSize: number = 0;
   backgroundSize: string = '';
+  editing = false;
   cards: Card[] = [];
   cardType = CardType;
 

@@ -17,6 +17,7 @@ export class CardComponent {
   @Input() card!: Card;
   @Input() gridSize!: number;
   @Input() gridElement!: HTMLElement;
+  @Input() editing!: boolean;
   @Output() cardUpdated = new EventEmitter();
   @Output() cardDeleted = new EventEmitter();
   @ViewChild('cardElement') cardElement!: ElementRef;
