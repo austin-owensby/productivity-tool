@@ -12,7 +12,38 @@ const dbConfig: DBConfig = {
     store: 'settings',
     storeConfig: { keyPath: 'id', autoIncrement: true },
     storeSchema: [
-      { name: 'gridSize', keypath: 'gridSize', options: { unique: false } }
+      { name: 'gridSize', keypath: 'gridSize', options: { unique: false } },
+      { name: 'showGridBehavior', keypath: 'showGridBehavior', options: { unique: false } },
+
+      { name: 'editViewIsDefault', keypath: 'editViewIsDefault', options: { unique: false } },
+      { name: 'deleteCardInReadonly', keypath: 'deleteCardInReadonly', options: { unique: false } },
+      { name: 'dragCardInReadonly', keypath: 'dragCardInReadonly', options: { unique: false } },
+      { name: 'resizeCardInReadonly', keypath: 'resizeCardInReadonly', options: { unique: false } },
+      { name: 'updateNoteGroupTitleInReadonly', keypath: 'updateNoteGroupTitleInReadonly', options: { unique: false } },
+      { name: 'deleteNoteInReadonly', keypath: 'deleteNoteInReadonly', options: { unique: false } },
+      { name: 'addNoteInReadonly', keypath: 'addNoteInReadonly', options: { unique: false } },
+      { name: 'updateNoteInReadonly', keypath: 'updateNoteInReadonly', options: { unique: false } },
+      { name: 'dragNoteInReadonly', keypath: 'dragNoteInReadonly', options: { unique: false } },
+      
+      { name: 'backgroundColor', keypath: 'backgroundColor', options: { unique: false } },
+      { name: 'gridLineColor', keypath: 'gridLineColor', options: { unique: false } },
+
+      { name: 'emptyCardColor', keypath: 'emptyCardColor', options: { unique: false } },
+      { name: 'emptyCardTextColor', keypath: 'emptyCardTextColor', options: { unique: false } },
+      { name: 'emptyCardBorderColor', keypath: 'emptyCardBorderColor', options: { unique: false } },
+      { name: 'emptyCardButtonColor', keypath: 'emptyCardButtonColor', options: { unique: false } },
+      { name: 'emptyCardButtonBackgroundColor', keypath: 'emptyCardButtonBackgroundColor', options: { unique: false } },
+      
+      { name: 'noteGroupColor', keypath: 'noteGroupColor', options: { unique: false } },
+      { name: 'noteGroupTextColor', keypath: 'noteGroupTextColor', options: { unique: false } },
+      { name: 'noteGroupBorderColor', keypath: 'noteGroupBorderColor', options: { unique: false } },
+      { name: 'noteGroupButtonColor', keypath: 'noteGroupButtonColor', options: { unique: false } },
+      { name: 'noteGroupButtonBackgroundColor', keypath: 'noteGroupButtonBackgroundColor', options: { unique: false } },
+      { name: 'noteColor', keypath: 'noteColor', options: { unique: false } },
+      { name: 'noteTextColor', keypath: 'noteTextColor', options: { unique: false } },
+      { name: 'noteBorderColor', keypath: 'noteBorderColor', options: { unique: false } },
+      { name: 'noteButtonColor', keypath: 'noteButtonColor', options: { unique: false } },
+      { name: 'noteButtonBackgroundColor', keypath: 'noteButtonBackgroundColor', options: { unique: false } },
     ]
   }, {
     store: 'noteGroups',

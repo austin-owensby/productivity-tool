@@ -1,19 +1,30 @@
-<div class="note-list" cdkDropList [cdkDropListData]="noteGroup!.notes" (cdkDropListDropped)="drop($event)">
+<div class="note-list" cdkDropList [cdkDropListData]="noteGroup!.notes" (cdkDropListDropped)="drop($event)" [ngStyle]="{'background-color': settings.noteGroupColor, 'border-color': settings.noteTextColor}">
     @for (note of noteGroup.notes; track $index) {
-        <div class="note" cdkDrag>
-            <div class="drag-handle" cdkDragHandle title="Drag to move and reorder notes">
-                <i class="material-icons">drag_indicator</i>
-            </div>
+        <div class="note" cdkDrag [cdkDragDisabled]="!(editing || settings.dragNoteInReadonly)" [ngStyle]="{'background-color': settings.noteColor}">
+            @if (editing || settings.dragNoteInReadonly) {
+                <div class="drag-handle" cdkDragHandle title="Drag to move and reorder notes" [ngStyle]="{'color': settings.noteTextColor}">
+                    <i class="material-icons">drag_indicator</i>
+                </div>
+            }
             <div class="note-placeholder" *cdkDragPlaceholder></div>
-            <mat-form-field class="note-input">
-                <input matInput [(ngModel)]="note.content" (change)="updateNoteGroup()">
-            </mat-form-field>
-            <button class="delete-button" mat-mini-fab (click)="deleteNote($index)" title="Delete Note Group">
-                <mat-icon>delete</mat-icon>
-            </button>
+            @if (editing || settings.updateNoteInReadonly) {
+                <mat-form-field class="note-input">
+                    <input matInput placeholder="Enter a note..." [(ngModel)]="note.content" (change)="updateNoteGroup()" [ngStyle]="{'color': settings.noteTextColor}">
+                </mat-form-field>
+            }
+            @else {
+                <div class="note-text" [ngStyle]="{'color': settings.noteTextColor}">{{note.content}}</div>
+            }
+            @if (editing || settings.deleteNoteInReadonly) {
+                <button class="delete-button" mat-mini-fab (click)="deleteNote($index)" title="Delete Note Group" [ngStyle]="{'background-color': settings.noteButtonBackgroundColor, 'color': settings.noteButtonColor, 'border-color': settings.noteButtonColor}">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            }
         </div>
     }
 </div>
-<button class="new-note-button" mat-mini-fab (click)="createNewNote()" title="Create New Note">
-    <mat-icon>add</mat-icon>
-</button>
+@if (editing || settings.addNoteInReadonly) {
+    <button class="new-note-button" mat-mini-fab (click)="createNewNote()" title="Create New Note" [ngStyle]="{'background-color': settings.noteGroupButtonBackgroundColor, 'color': settings.noteGroupButtonColor, 'border-color': settings.noteGroupButtonColor}">
+        <mat-icon>add</mat-icon>
+    </button>
+}

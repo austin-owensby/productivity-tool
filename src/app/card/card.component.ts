@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Card } from '../models/card';
+import { Card, CardType } from '../models/card';
 import { CdkDragHandle, CdkDrag, Point, DragRef, CdkDragStart, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { AngularDraggableModule } from 'angular2-draggable';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { Settings } from '../models/settings';
 
 @Component({
   selector: 'app-card',
@@ -15,9 +16,9 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class CardComponent {
   @Input() card!: Card;
-  @Input() gridSize!: number;
   @Input() gridElement!: HTMLElement;
   @Input() editing!: boolean;
+  @Input() settings!: Settings;
   @Output() cardUpdated = new EventEmitter();
   @Output() cardDeleted = new EventEmitter();
   @ViewChild('cardElement') cardElement!: ElementRef;
@@ -25,7 +26,9 @@ export class CardComponent {
 
   computeDragRenderPos = (pos: Point, dragRef: DragRef) => {
     // Snap grid
-    const snapObject = { x: Math.max(0, Math.floor(pos.x / this.gridSize) * this.gridSize), y: Math.max(0, Math.floor(pos.y / this.gridSize) * this.gridSize) };
+    const gridSize = this.settings.gridSize < 1 ? 1 : this.settings.gridSize;
+    const snapObject = { x: Math.max(0, Math.floor(pos.x / gridSize) * gridSize), y: Math.max(0, Math.floor(pos.y / gridSize) * gridSize) };
+    
     return snapObject;
   }
 
@@ -53,6 +56,42 @@ export class CardComponent {
   bringToFront = () => {
     CardComponent.zIndex++;
     this.cardElement.nativeElement.style.zIndex = CardComponent.zIndex.toString();
+  }
+
+  getCardColor() {
+    switch (this.card.type) {
+      case CardType.emptyCard:
+        return this.settings.emptyCardColor;
+      case CardType.noteGroup:
+        return this.settings.noteGroupColor;
+    }
+  }
+
+  getTextColor() {
+    switch (this.card.type) {
+      case CardType.emptyCard:
+        return this.settings.emptyCardTextColor;
+      case CardType.noteGroup:
+        return this.settings.noteGroupTextColor;
+    }
+  }
+
+  getButtonColor() {
+    switch (this.card.type) {
+      case CardType.emptyCard:
+        return this.settings.emptyCardButtonColor;
+      case CardType.noteGroup:
+        return this.settings.noteGroupButtonColor;
+    }
+  }
+
+  getButtonBackgroundColor() {
+    switch (this.card.type) {
+      case CardType.emptyCard:
+        return this.settings.emptyCardButtonBackgroundColor;
+      case CardType.noteGroup:
+        return this.settings.noteGroupButtonBackgroundColor;
+    }
   }
 
   updateCard() {

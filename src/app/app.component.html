@@ -1,34 +1,32 @@
 @if (loading) {
   <mat-spinner class="loading"></mat-spinner>
-  <mat-slider min="0" max="100" step="1" showTickMarks discrete>
-    <input matSliderThumb>
-  </mat-slider>
 }
 @else {
-  <div #grid id="grid" cdkDropListGroup [style.background-size]="editing ? backgroundSize : ''">
+  <div #grid id="grid" cdkDropListGroup [ngStyle]="{ 'background-size': showGrid() ? backgroundSize : '', 'background-image': backgroundImage}">
     <div id="settings">
       <button mat-raised-button (click)="createCard()">New Card</button>
       <mat-slide-toggle [(ngModel)]="editing">Edit</mat-slide-toggle>
-      <button mat-raised-button>Settings</button>
+      <button mat-raised-button (click)="openSettingsDialog()">Settings</button>
       <i id="open-icon" class="material-icons">open_in_full</i>
     </div>
     <!--List of cards-->
     @for (card of cards; track card.type + card.id) {
-      <app-card [card]="card" [gridSize]="gridSize" [gridElement]="grid" [editing]="editing" (cardDeleted)="deleteCard(card)" (cardUpdated)="updateCard(card)">
+      <app-card [card]="card" [settings]="settings" [gridElement]="grid" [editing]="editing" (cardDeleted)="deleteCard(card)" (cardUpdated)="updateCard(card)">
         <!--Card Header-->
         <ng-container header>
           @switch (card.type) {
             @case (cardType.emptyCard) {
-              <h2>Choose a card type</h2>
+              <h2 title="Choose a card type" [style.color]="settings.emptyCardTextColor">Choose a card type</h2>
             }
             @case (cardType.noteGroup) {
-              @if (editing) {
+              @if (editing || settings.updateNoteGroupTitleInReadonly) {
                 <mat-form-field class="note-group-title">
-                  <input matInput [(ngModel)]="castToNoteGroup(card).title" (change)="updateCard(card)">
+                  <mat-label>Title</mat-label>
+                  <input matInput [(ngModel)]="castToNoteGroup(card).title" (change)="updateCard(card)" [ngStyle]="{'color': settings.noteGroupTextColor}">
                 </mat-form-field>
               }
               @else {
-                <h2>{{castToNoteGroup(card).title}}</h2>
+                <h2 [title]="castToNoteGroup(card).title" [ngStyle]="{'color': settings.noteGroupTextColor}">{{castToNoteGroup(card).title}}</h2>
               }
             }
           }
@@ -39,11 +37,11 @@
           @switch (card.type) {
             @case (cardType.emptyCard) {
               <div class="button-list">
-                <button mat-raised-button (click)="createNoteGroup(card)">New Note Group</button>
+                <button mat-raised-button (click)="createNoteGroup(card)" [ngStyle]="{ 'background-color': settings.noteGroupColor, 'border-color': settings.noteGroupTextColor, 'color': settings.noteGroupTextColor}">New Note Group</button>
               </div>
             }
             @case (cardType.noteGroup) {
-              <app-note-group [noteGroup]="castToNoteGroup(card)" (noteGroupUpdated)="updateCard(getNoteCardById($event))"></app-note-group>
+              <app-note-group [noteGroup]="castToNoteGroup(card)" [settings]="settings" [editing]="editing" (noteGroupUpdated)="updateCard(getNoteCardById($event))"></app-note-group>
             }
           }
         </ng-container>

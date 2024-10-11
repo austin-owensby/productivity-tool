@@ -1,17 +1,17 @@
 <div #cardElement [id]="'note-' + card.type + '-' + card.id" class="card"
-    [ngStyle]="{'transform': card.transform, 'height': card.height, 'width': card.width, 'top': card.top, 'left': card.left}"
-    cdkDrag [cdkDragDisabled]="!editing" (cdkDragReleased)="handleDrop()" (cdkDragStarted)="bringToFront()" (click)="bringToFront()" [cdkDragConstrainPosition]="computeDragRenderPos" cdkDragBoundary="#grid"
-    ngResizable [rzHandles]="editing ? 'n,e,s,w,se,sw,ne,nw' : ''" [rzGrid]="gridSize" [rzMinWidth]="150" [rzMinHeight]="200" (rzStop)="handleResize()" [rzContainment]="gridElement">
+    [ngStyle]="{'transform': card.transform, 'height': card.height, 'width': card.width, 'top': card.top, 'left': card.left, 'background': getCardColor(), 'border-color': getTextColor()}"
+    cdkDrag [cdkDragDisabled]="!(editing || settings.dragCardInReadonly)" (cdkDragReleased)="handleDrop()" (cdkDragStarted)="bringToFront()" (click)="bringToFront()" [cdkDragConstrainPosition]="computeDragRenderPos" cdkDragBoundary="#grid"
+    ngResizable [rzHandles]="editing || settings.resizeCardInReadonly ? 'n,e,s,w,se,sw,ne,nw' : ''" [rzGrid]="this.settings.gridSize" [rzMinWidth]="150" [rzMinHeight]="200" (rzStop)="handleResize()" [rzContainment]="gridElement">
     <div class="card-content">
         <div class="card-header">
-            @if (editing) {
+            @if (editing || settings.dragCardInReadonly) {
                 <div class="drag-handle" cdkDragHandle title="Drag to move the card">
-                    <i class="material-icons">drag_indicator</i>
+                    <i class="material-icons" [style.color]="getTextColor()">drag_indicator</i>
                 </div>
             }
             <ng-content select="[header]"></ng-content>
-            @if (editing) {
-                <button class="delete-button" mat-mini-fab (click)="deleteCard()" title="Delete Card">
+            @if (editing || settings.deleteCardInReadonly) {
+                <button class="delete-button" mat-mini-fab (click)="deleteCard()" title="Delete Card" [ngStyle]="{'background-color': getButtonBackgroundColor(), 'color': getButtonColor()}">
                     <mat-icon>delete</mat-icon>
                 </button>
             }

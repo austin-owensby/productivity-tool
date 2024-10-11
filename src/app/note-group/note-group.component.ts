@@ -1,21 +1,25 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Note, NoteGroup } from '../models/note-group';
 import { CdkDragPlaceholder, CdkDragHandle, CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { Settings } from '../models/settings';
+import { Note, NoteGroup } from '../models/note-group';
 
 @Component({
   selector: 'app-note-group',
   standalone: true,
-  imports: [CdkDropList, CdkDrag, CdkDragPlaceholder, CdkDragHandle, MatInputModule, MatFormFieldModule, FormsModule, MatButtonModule, MatIconModule],
+  imports: [CdkDropList, CdkDrag, CdkDragPlaceholder, CdkDragHandle, MatInputModule, MatFormFieldModule, FormsModule, MatButtonModule, MatIconModule, CommonModule],
   templateUrl: './note-group.component.html',
   styleUrl: './note-group.component.scss'
 })
 export class NoteGroupComponent {
   @Input() noteGroup!: NoteGroup;
+  @Input() editing!: boolean;
+  @Input() settings!: Settings;
   @Output() noteGroupUpdated = new EventEmitter<number>();
   
   drop(event: CdkDragDrop<Note[]>) {

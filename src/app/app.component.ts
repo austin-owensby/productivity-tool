@@ -1,33 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { NoteGroup } from './models/note-group';
-import { Settings } from './models/settings';
+import { Settings, ShowGridBehavior } from './models/settings';
 import { Card, CardType } from './models/card';
 import { CardComponent } from './card/card.component';
 import { NoteGroupComponent } from "./note-group/note-group.component";
+import { SettingsComponent } from './settings/settings.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NoteGroupComponent, CardComponent, CdkDropListGroup, MatProgressSpinnerModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSliderModule, MatSlideToggleModule],
+  imports: [NoteGroupComponent, CardComponent, CdkDropListGroup, MatProgressSpinnerModule, MatButtonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   loading = true;
+  settings: Settings = new Settings();
   gridSize: number = 0;
   backgroundSize: string = '';
+  backgroundImage: string = 'linear-gradient(to right, black 1px, transparent 1px), linear-gradient(to bottom, black 1px, transparent 1px);';
   editing = false;
   cards: Card[] = [];
   cardType = CardType;
+  dialog = inject(MatDialog);
 
   constructor(private dbService: NgxIndexedDBService) {
     this.fetchSettings(() => this.loadData());
@@ -39,9 +44,8 @@ export class AppComponent {
         // Create a new setting
         console.log("No existing settings could be found, creating a new one...");
 
-        const newSettings: Settings = {
-          gridSize: 50
-        };
+        const newSettings: Settings = new Settings();
+        delete newSettings.id;
 
         this.dbService.add('settings', newSettings).subscribe((settings) => {
           this.applySettings(settings);
@@ -66,8 +70,13 @@ export class AppComponent {
   }
 
   private applySettings(settings: Settings) {
+    this.settings = settings;
     this.gridSize = settings.gridSize;
     this.backgroundSize = `${this.gridSize}px ${this.gridSize}px`;
+    this.editing = settings.editViewIsDefault;
+
+    document.getElementsByTagName('body')[0].style.background = settings.backgroundColor;
+    this.backgroundImage = `linear-gradient(to right, ${settings.gridLineColor} 1px, transparent 1px), linear-gradient(to bottom, ${settings.gridLineColor} 1px, transparent 1px)`;
   }
 
   private loadData() {
@@ -81,6 +90,17 @@ export class AppComponent {
         this.loading = false;
       });
     });
+  }
+
+  showGrid() {
+    switch (this.settings.showGridBehavior) {
+      case ShowGridBehavior.never:
+        return false;
+      case ShowGridBehavior.edit:
+        return this.editing;
+      case ShowGridBehavior.always:
+        return true;
+    }
   }
 
   createCard() {
@@ -141,5 +161,19 @@ export class AppComponent {
     const noteCard = this.cards.find(c => c.id == id && c.type == CardType.noteGroup);
 
     return noteCard!;
+  }
+
+  openSettingsDialog(): void {
+    const dialogRef = this.dialog.open(SettingsComponent, {
+      data: structuredClone(this.settings),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        this.dbService.update('settings', result).subscribe(() => {
+          this.applySettings(result);
+        });
+      }
+    });
   }
 }

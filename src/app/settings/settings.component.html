@@ -1,0 +1,88 @@
+<h2 mat-dialog-title>Settings</h2>
+<mat-dialog-content>
+    <mat-tab-group animationDuration="0ms">
+        <mat-tab class="tab-group" label="Grid">
+            <div>
+                <label title="Adjusts the size of the grid that cards snap to. Set to 0px for no snapping.">Grid Size</label>
+                <mat-slider min="0" max="100" step="5" showTickMarks>
+                    <input matSliderThumb [(ngModel)]="settings.gridSize" #slider>
+                </mat-slider>
+                <label>{{slider.value}}px</label>
+            </div>
+            <mat-form-field>
+                <mat-label>Show Grid Behavior</mat-label>
+                <mat-select [(ngModel)]="settings.showGridBehavior">
+                    <mat-option [value]="showGridBehavior.never">Never</mat-option>
+                    <mat-option [value]="showGridBehavior.edit">In Edit Mode</mat-option>
+                    <mat-option [value]="showGridBehavior.always">Always</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-tab>
+        <mat-tab class="tab-group" label="Edit Mode">
+            <mat-slide-toggle [(ngModel)]="settings.editViewIsDefault">Edit View is Default</mat-slide-toggle>
+            <h3>Advanced Edit Options</h3>
+            <h4>All Cards</h4>
+            <mat-slide-toggle [(ngModel)]="settings.deleteCardInReadonly">Allow Cards to be Deleted in Readonly Mode</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="settings.dragCardInReadonly">Allow Dragging Cards in Readonly Mode</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="settings.resizeCardInReadonly">Allow Resizing Cards in Readonly Mode</mat-slide-toggle>
+            <h4>Note Groups</h4>
+            <mat-slide-toggle [(ngModel)]="settings.updateNoteGroupTitleInReadonly">Allow Note Group Title Updates in Readonly Mode</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="settings.addNoteInReadonly">Allow New Notes in Readonly Mode</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="settings.updateNoteInReadonly">Allow Note Text Updates in Readonly Mode</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="settings.deleteNoteInReadonly">Allow Notes to be Deleted in Readonly Mode</mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="settings.dragNoteInReadonly">Allow Notes to be Dragged and Sorted in Readonly Mode</mat-slide-toggle>
+        </mat-tab>
+        <mat-tab class="tab-group" label="Style">
+            <h3>General</h3>
+            <div class="settings-group">
+                <label>Background Color</label>
+                <input [(ngModel)]="settings.backgroundColor" type="color">
+                <label>Grid Line Color</label>
+                <input [(ngModel)]="settings.gridLineColor" type="color">
+            </div>
+
+            <h3>Cards</h3>
+            <h4>Empty Card</h4>
+            <div class="settings-group">
+                <label>Empty Card Color</label>
+                <input [(ngModel)]="settings.emptyCardColor" type="color">
+                <label>Empty Card Text Color</label>
+                <input [(ngModel)]="settings.emptyCardTextColor" type="color">
+                <label>Empty Card Button Color</label>
+                <input [(ngModel)]="settings.emptyCardButtonColor" type="color">
+                <label>Empty Card Button Background Color</label>
+                <input [(ngModel)]="settings.emptyCardButtonBackgroundColor" type="color">
+            </div>
+
+            <h4>Note Group</h4>
+            <div class="settings-group">
+                <label>Note Group Card Color</label>
+                <input [(ngModel)]="settings.noteGroupColor" type="color">
+                <label>Note Group Text Color</label>
+                <input [(ngModel)]="settings.noteGroupTextColor" type="color">
+                <label>Note Group Button Color</label>
+                <input [(ngModel)]="settings.noteGroupButtonColor" type="color">
+                <label>Note Group Button Background Color</label>
+                <input [(ngModel)]="settings.noteGroupButtonBackgroundColor" type="color">
+            </div>
+
+            <h5>Note</h5>
+            <div class="settings-group">
+                <label>Note Color</label>
+                <input [(ngModel)]="settings.noteColor" type="color">
+                <label>Note Text Color</label>
+                <input [(ngModel)]="settings.noteTextColor" type="color">
+                <label>Note Button Color</label>
+                <input [(ngModel)]="settings.noteButtonColor" type="color">
+                <label>Note Button Background Color</label>
+                <input [(ngModel)]="settings.noteButtonBackgroundColor" type="color">
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onCloseClick()">Cancel</button>
+    <button mat-button (click)="onResetClick()">Reset to Defaults</button>
+    <button mat-button (click)="onUndoClick()">Undo</button>
+    <button mat-button (click)="onSaveClick()" cdkFocusInitial>Save</button>
+</mat-dialog-actions>

@@ -4,7 +4,7 @@ html,
 body {
     height: 100%;
     overflow: hidden;
-    @include mat.form-field-density(-2);
+    @include mat.form-field-density(-1);
 }
 
 body {
@@ -23,4 +23,18 @@ h2 {
 
 .ng-resizable-diagonal {
     border: none !important;
+}
+
+button {
+    border: 1px solid !important;
+}
+
+.mdc-switch {
+    border: none !important;
+}
+
+.mat-mdc-tab-body {
+    overflow-y: auto !important;
+    height: 20rem !important;
+    width: 50rem;
 }
